@@ -1,29 +1,47 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.css'  // Global styles for your application
-import { RouterProvider } from "react-router-dom";  // Import RouterProvider to use the router
-import { router } from "./routes";  // Import the router configuration
-import { StoreProvider } from './hooks/useGlobalReducer';  // Import the StoreProvider for global state management
-import { BackendURL } from './components/BackendURL';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css"; // 🎨 Estilos globales para toda la app
+
+// 🧭 Sistema de rutas
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes"; // Configuración de rutas
+
+// 🧠 Estado global con useReducer
+import { StoreProvider } from "./hooks/useGlobalReducer";
+
+// 📦 Estado específico con useState (finanzas, metas, reflexiones)
+import { DataProvider } from "./Context/DataContext";
+
+// ⚠️ Componente que se muestra si falta la URL del backend
+import { BackendURL } from "./components/BackendURL";
 
 const Main = () => {
-    
-    if(! import.meta.env.VITE_BACKEND_URL ||  import.meta.env.VITE_BACKEND_URL == "") return (
-        <React.StrictMode>
-              <BackendURL/ >
-        </React.StrictMode>
-        );
-    return (
-        <React.StrictMode>  
-            {/* Provide global state to all components */}
-            <StoreProvider> 
-                {/* Set up routing for the application */} 
-                <RouterProvider router={router}>
-                </RouterProvider>
-            </StoreProvider>
-        </React.StrictMode>
-    );
-}
+  // 🔍 Verifica si la variable de entorno VITE_BACKEND_URL está definida
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
 
-// Render the Main component into the root DOM element.
-ReactDOM.createRoot(document.getElementById('root')).render(<Main />)
+  // ⚠️ Si no hay URL del backend, muestra un mensaje de configuración
+  if (!backendURL || backendURL === "") {
+    return (
+      <React.StrictMode>
+        <BackendURL />
+      </React.StrictMode>
+    );
+  }
+
+  // 🚀 Si la URL está definida, renderiza la app con los providers
+  return (
+    <React.StrictMode>
+      {/* 🧠 Proveedor de estado global con useReducer */}
+      <StoreProvider>
+        {/* 📦 Proveedor de datos específicos con useState */}
+        <DataProvider>
+          {/* 🧭 Proveedor de rutas para navegación */}
+          <RouterProvider router={router} />
+        </DataProvider>
+      </StoreProvider>
+    </React.StrictMode>
+  );
+};
+
+// 🖥️ Renderiza el componente Main dentro del elemento raíz del DOM
+ReactDOM.createRoot(document.getElementById("root")).render(<Main />);
