@@ -37,6 +37,11 @@ const Navbar = () => {
             <i className="fas fa-comment-dots nav-icon"></i> Reflexión
           </NavLink>
         </li>
+        <li>
+          <NavLink to="/calendario" className="navlink" activeclassname="active">
+            <i className="fas fa-calendar-alt nav-icon"></i> Calendario
+          </NavLink>
+        </li>
       </ul>
     </nav>
   );

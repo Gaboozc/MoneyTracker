@@ -1,0 +1,139 @@
+/* ===== Contenedor principal ===== */
+.calendario-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 2rem;
+  text-align: center;
+  background-color: #f8f9fa;
+}
+
+/* ===== Calendario ===== */
+.react-calendar {
+  margin-top: 1rem;
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+}
+
+.react-calendar__tile--active {
+  background: #0d6efd !important;
+  color: white !important;
+}
+
+.react-calendar__navigation button {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* ===== Detalles del día ===== */
+.detalle-dia {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.detalle-dia h3 {
+  margin-bottom: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* ===== Botón Agregar Transacción ===== */
+.btn-transaccion {
+  margin: 1rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #0d6efd;
+  color: white;
+  width: 220px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-transaccion:hover {
+  background-color: #0b5ed7;
+}
+
+/* ===== Overlay del Modal ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* ===== Contenedor del Modal ===== */
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ===== Inputs, Selects y Textareas ===== */
+.modal label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+  text-align: left;
+  color: #555;
+}
+
+.modal input,
+.modal-select,
+.modal textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.modal textarea {
+  resize: none;
+}
+
+/* ===== Botones dentro del modal ===== */
+.modal-buttons {
+  margin-top: 1.5rem;
+}
+
+.modal-buttons button {
+  margin: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.modal-buttons button:first-child {
+  background-color: #198754;
+  color: white;
+}
+
+.modal-buttons button:last-child {
+  background-color: #6c757d;
+  color: white;
+}
+
+.modal-buttons button:hover {
+  opacity: 0.85;
+}

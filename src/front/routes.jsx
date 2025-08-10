@@ -7,6 +7,7 @@ import Exportar from "./pages/Exportar.jsx";
 import Historial from "./pages/Historial.jsx";
 import Metas from "./pages/Metas.jsx";
 import Reflexion from "./pages/Reflexion.jsx";
+import Calendario from "./pages/Calendario.jsx"
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +27,7 @@ export const router = createBrowserRouter(
       <Route path="/historial" element={<Historial />} />
       <Route path="/metas" element={<Metas />} />
       <Route path="/reflexion" element={<Reflexion />} />
+      <Route path="/calendario" element={<Calendario />} />
     </Route>
   )
 );
