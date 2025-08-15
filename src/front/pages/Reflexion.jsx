@@ -1,39 +1,69 @@
 import React, { useState } from "react";
 import { useGlobalReducer } from "../store.jsx";
+import "../styles/Reflexion.css";
 
 const Reflexion = () => {
-  // ⬇️ Extraemos store y dispatch del contexto global (objeto, no array)
-  const { store, dispatch } = useGlobalReducer();
-  const { reflexion } = store;
+  const { store, actions } = useGlobalReducer();
+
+  // Valor por defecto seguro
+  const { historialReflexiones = [] } = store || {};
+  const lista = Array.isArray(historialReflexiones)
+    ? historialReflexiones
+    : [];
+
   const [texto, setTexto] = useState("");
 
-  // Guarda la reflexión en el estado global
-  const guardarReflexion = () => {
-    if (texto.trim()) {
-      dispatch({ type: "set_reflexion", payload: texto });
-      setTexto("");
-    }
+  const handleGuardar = () => {
+    const limpio = texto.trim();
+    if (!limpio) return;
+    actions.addReflexion(limpio);
+    setTexto("");
+  };
+
+  const handleBorrar = (id) => {
+    actions.deleteReflexion(id);
   };
 
   return (
-    <section>
-      <h1>Reflexión del Día</h1>
+    <section className="reflexion-container">
+      <header className="reflexion-header">
+        <h1>🧘 Reflexión</h1>
+        <p>Escribe tus pensamientos y guarda tu evolución</p>
+      </header>
 
-      {/* ✏ Campo de texto para escribir reflexión */}
-      <textarea
-        value={texto}
-        onChange={(e) => setTexto(e.target.value)}
-        placeholder="Escribe tu reflexión..."
-      />
+      <div className="card blue">
+        <textarea
+          placeholder="Escribe tu reflexión..."
+          value={texto}
+          onChange={(e) => setTexto(e.target.value)}
+        ></textarea>
+        <button type="button" onClick={handleGuardar}>
+          Guardar
+        </button>
+      </div>
 
-      {/* 💾 Botón para guardar */}
-      <button onClick={guardarReflexion}>Guardar</button>
-
-      {/* 🧘 Muestra la última reflexión */}
-      {reflexion && (
-        <div>
-          <h2>Última reflexión</h2>
-          <p>{reflexion}</p>
+      {lista.length > 0 && (
+        <div className="card green">
+          <h2>📜 Historial de reflexiones</h2>
+          <ul className="reflexiones-lista">
+            {lista.map((ref) => (
+              <li key={ref.id}>
+                <div className="reflexion-item">
+                  <div>
+                    <span className="fecha">{ref.fecha}</span>
+                    <span className="texto">{ref.texto}</span>
+                  </div>
+                  <button
+                    className="btn-borrar"
+                    onClick={() => handleBorrar(ref.id)}
+                    title="Eliminar reflexión"
+                  >
+                    ❌
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </section>

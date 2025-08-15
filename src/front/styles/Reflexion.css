@@ -1,0 +1,124 @@
+/* ====== Contenedor principal ====== */
+.reflexion-container {
+  padding: 1.5rem;
+  background: linear-gradient(to bottom, #fff, #f9fafb);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 800px;
+  margin: auto;
+}
+
+/* ====== Encabezado ====== */
+.reflexion-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.reflexion-header h1 {
+  font-size: 2rem;
+  margin: 0;
+  color: #333;
+}
+
+.reflexion-header p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* ====== Tarjetas ====== */
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border-left: 4px solid transparent;
+}
+
+.blue { border-color: #60a5fa; }
+.green { border-color: #4ade80; }
+
+/* ====== Área de texto ====== */
+textarea {
+  width: 100%;
+  min-height: 120px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.75rem;
+  resize: vertical;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(96,165,250,0.3);
+}
+
+/* ====== Botones ====== */
+button {
+  background: #3b82f6;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+/* ====== Lista de reflexiones ====== */
+.reflexiones-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.reflexiones-lista li {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.reflexiones-lista li:last-child {
+  border-bottom: none;
+}
+
+.fecha {
+  display: block;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.texto {
+  color: #333;
+  display: block;
+  margin-top: 0.2rem;
+}
+
+/* ====== Ítem de reflexión con botón borrar ====== */
+.reflexion-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+/* Botón borrar */
+.btn-borrar {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #ef4444;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.btn-borrar:hover {
+  transform: scale(1.2);
+  color: #b91c1c;
+}

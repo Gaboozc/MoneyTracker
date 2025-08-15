@@ -13,13 +13,8 @@ const Navbar = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/cierre-anual" className="navlink" activeclassname="active">
-            <i className="fas fa-calendar-check nav-icon"></i> Cierre Anual
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/exportar" className="navlink" activeclassname="active">
-            <i className="fas fa-file-export nav-icon"></i> Exportar
+          <NavLink to="/calendario" className="navlink" activeclassname="active">
+            <i className="fas fa-calendar-alt nav-icon"></i> Calendario
           </NavLink>
         </li>
         <li>
@@ -38,8 +33,13 @@ const Navbar = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/calendario" className="navlink" activeclassname="active">
-            <i className="fas fa-calendar-alt nav-icon"></i> Calendario
+          <NavLink to="/resumen-anual" className="navlink" activeclassname="active">
+            <i className="fas fa-calendar-check nav-icon"></i> Resumen Anual
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/exportar" className="navlink" activeclassname="active">
+            <i className="fas fa-file-export nav-icon"></i> Exportar
           </NavLink>
         </li>
       </ul>

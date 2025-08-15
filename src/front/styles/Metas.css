@@ -1,0 +1,151 @@
+/* 🌟 Contenedor principal */
+.metas-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* 🧠 Encabezado */
+.metas-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.metas-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.metas-header p {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* 🧩 Tarjetas base */
+.card {
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 🎨 Colores por tipo */
+.blue {
+  background-color: #e0f0ff;
+}
+
+.green {
+  background-color: #e6ffe0;
+}
+
+.yellow {
+  background-color: #fff9d6;
+}
+
+/* ➕ Campo nueva meta */
+.metas-add {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.metas-add input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.metas-add button {
+  padding: 0.5rem 1rem;
+  background-color: #007acc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.metas-add button:hover {
+  background-color: #005fa3;
+}
+
+/* 📈 Progreso */
+.metas-progreso h2 {
+  margin-bottom: 0.5rem;
+}
+
+.metas-progreso .progress {
+  height: 12px;
+  background-color: #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #4caf50;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* 📋 Lista de metas */
+.metas-lista h2 {
+  margin-bottom: 0.5rem;
+}
+
+.metas-lista ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.metas-lista li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem;
+  border-bottom: 1px solid #ccc;
+  font-size: 1rem;
+  color: #333;
+  background-color: #fff;
+}
+
+.metas-lista li:last-child {
+  border-bottom: none;
+}
+
+/* ✅ Meta cumplida */
+.metas-lista li.cumplida span {
+  text-decoration: line-through;
+  color: #888;
+  visibility: visible !important;
+  display: inline !important;
+}
+
+/* 🛠 Acciones */
+.acciones {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.acciones button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 1 !important;
+  color: #333;
+  transition: opacity 0.2s ease;
+}
+
+.acciones button:hover {
+  opacity: 0.7;
+}
