@@ -53,6 +53,23 @@ const safeFormat = (fmt, value) => {
 };
 
 /* ----------------------------------------------------------------------------- */
+/* Componente reutilizable de tarjeta (añadido) */
+/* ----------------------------------------------------------------------------- */
+function DashboardCard({ icon, title, children, extraClass = "" }) {
+  return (
+    <div className={`card ${extraClass}`}>
+      <div className="card-icon" aria-hidden>
+        {icon}
+      </div>
+      <div className="card-info">
+        <h4>{title}</h4>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------------------------------------------- */
 /* Componente principal */
 /* ----------------------------------------------------------------------------- */
 
@@ -180,21 +197,19 @@ export default function Dashboard({ notas = [], moneda = "MXN", categorias = [] 
             />
           </div>
         </div>
-              </div>
+      </div>
 
-      {/* Secciones inferiores */}
+      {/* Secciones inferiores - ahora usando DashboardCard para mantener estilo consistente */}
       <div className="dash-bottom">
-        <div className="resumen">
-          <h4>Resumen</h4>
+        <DashboardCard icon="📑" title="Resumen" extraClass="resumen">
           <p>{totalTransacciones} transacciones</p>
           <p>
             Promedio diario: {safeFormat(fmt, promedioDiario)}{" "}
             <span className="muted">({diasMes} días)</span>
           </p>
-        </div>
+        </DashboardCard>
 
-        <div className="categorias">
-          <h4>Categorías</h4>
+        <DashboardCard icon="📂" title="Categorías" extraClass="categorias">
           {categoriasCalculadas.length === 0 ? (
             <p className="sin-datos">Sin datos</p>
           ) : (
@@ -207,11 +222,10 @@ export default function Dashboard({ notas = [], moneda = "MXN", categorias = [] 
               ))}
             </div>
           )}
-        </div>
+        </DashboardCard>
 
-        {/* ✅ NUEVO: Sección de metas */}
-        <div className="metas">
-          <h4>Metas</h4>
+        {/* ✅ Sección de metas (manteniendo lógica original) */}
+        <DashboardCard icon="🎯" title="Metas" extraClass="metas">
           {store.metas.length === 0 ? (
             <p className="sin-datos">Sin metas</p>
           ) : (
@@ -237,7 +251,7 @@ export default function Dashboard({ notas = [], moneda = "MXN", categorias = [] 
               ))}
             </ul>
           )}
-        </div>
+        </DashboardCard>
       </div>
     </div>
   );

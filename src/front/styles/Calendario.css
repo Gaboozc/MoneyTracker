@@ -253,3 +253,153 @@
   font-size: 0.85rem;
   margin-top: 0.3rem;
 }
+/* ----- Hacer negros solo los días de lunes a viernes del mes actual ----- */
+.react-calendar__month-view__days__day:not(.react-calendar__month-view__days__day--neighboringMonth):not(.react-calendar__month-view__days__day--weekend) {
+  color: #000000 !important;
+}
+
+/* Para el día actual (now) que sea de lunes a viernes */
+.react-calendar__tile--now:not(.react-calendar__month-view__days__day--weekend) {
+  color: #000000 !important;
+}
+
+/* Para el día seleccionado (active) que sea de lunes a viernes */
+.react-calendar__tile--active:not(.react-calendar__month-view__days__day--weekend) {
+  color: #000000 !important;
+}
+/* ----- Corregir colores en los menús de navegación (mes y año) ----- */
+.react-calendar__navigation__label,
+.react-calendar__navigation__arrow {
+  color: #000000 !important;
+  background-color: transparent !important;
+}
+
+/* Para la vista de selección de mes */
+.react-calendar__year-view__months__month,
+.react-calendar__decade-view__years__year,
+.react-calendar__century-view__decades__decade {
+  color: #000000 !important;
+}
+
+/* Asegurar que los textos en los menús sean visibles */
+.react-calendar__navigation__label:enabled:hover,
+.react-calendar__navigation__label:enabled:focus,
+.react-calendar__navigation__arrow:enabled:hover,
+.react-calendar__navigation__arrow:enabled:focus {
+  background-color: #f0f0f0 !important;
+  color: #000000 !important;
+}
+/* ----- Highlight minimalista para el día actual ----- */
+.react-calendar__tile--now {
+  background: rgba(59, 130, 246, 0.15) !important; /* Azul muy suave */
+  color: #000000 !important;
+  font-weight: 600;
+  border: 2px solid #3b82f6 !important; /* Borde azul delgado */
+  border-radius: 4px !important;
+}
+
+/* Efecto hover sutil */
+.react-calendar__tile--now:enabled:hover,
+.react-calendar__tile--now:enabled:focus {
+  background: rgba(59, 130, 246, 0.25) !important;
+  border-color: #2563eb !important;
+}
+
+/* Asegurar que los puntos de actividad sean visibles */
+.react-calendar__tile--now .cal-puntos {
+  opacity: 1;
+}
+/* ----- Corregir visibilidad en el modal ----- */
+
+/* Botones de tipo selección (Ingreso/Egreso) */
+.tipo-seleccion button {
+  color: #000000 !important; /* Texto negro siempre visible */
+  background: #f8f9fa !important; /* Fondo gris claro */
+  border: 1px solid #ced4da !important;
+  transition: all 0.2s ease;
+}
+
+/* Botón activo */
+.tipo-seleccion .active {
+  background-color: #1976d2 !important;
+  border-color: #1976d2 !important;
+  color: #ffffff !important; /* Texto blanco cuando está activo */
+}
+
+/* Efecto hover para botones no activos */
+.tipo-seleccion button:not(.active):hover {
+  background: #e9ecef !important;
+  border-color: #adb5bd !important;
+}
+
+/* Botón primario (Agregar) */
+.btn-primary {
+  background-color: #1976d2 !important;
+  color: #ffffff !important; /* Texto blanco */
+  border: none;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 0.5rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+/* Efecto hover para botón primario */
+.btn-primary:hover {
+  background-color: #1565c0 !important;
+}
+
+/* Inputs del formulario */
+.form-agregar input {
+  color: #000000 !important; /* Texto negro */
+  background: #ffffff !important; /* Fondo blanco */
+  border: 1px solid #d0d0d0;
+}
+
+/* Placeholder visible */
+.form-agregar input::placeholder {
+  color: #6c757d !important; /* Gris para placeholder */
+}
+
+/* Botones de acción en registros */
+.btn-link {
+  color: #1976d2 !important; /* Azul visible */
+  background: none !important;
+}
+
+.btn-link.danger {
+  color: #c62828 !important; /* Rojo visible */
+}
+
+/* Efecto hover para botones de enlace */
+.btn-link:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+/* ----- Botón de cerrar (X) visible ----- */
+.modal-close {
+  color: #000000 !important; /* Texto negro */
+  background: none !important;
+  border: none !important;
+  font-size: 1.5rem !important;
+  font-weight: bold;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem !important;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+/* Efecto hover para el botón de cerrar */
+.modal-close:hover {
+  color: #c62828 !important; /* Rojo al hover */
+  background: rgba(198, 40, 40, 0.1) !important;
+}
+
+/* Asegurar que el ícono sea visible */
+.modal-close svg {
+  color: inherit !important;
+  fill: currentColor !important;
+}
