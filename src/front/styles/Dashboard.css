@@ -1,3 +1,29 @@
+:root {
+  --bg: #f9fafb;
+  --card-bg: #fff;
+  --text: #1f2937;
+  --text-muted: #6b7280;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --card-bg: #1e293b;
+  --text: #f9fafb;
+  --text-muted: #94a3b8;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.card {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+
 .dashboard-container {
   padding: 1.5rem;
   max-width: 1200px;
@@ -137,7 +163,7 @@
   animation: fadeInNumber 0.5s ease;
 }
 
-/* Colores específicos */
+/* ===== COLORES ESPECÍFICOS ===== */
 .card.ingreso { 
   border-left-color: #22c55e;
   background: linear-gradient(135deg, #ffffff, #f0fdf4);
@@ -155,6 +181,20 @@
   background: linear-gradient(135deg, #ffffff, #fff7ed);
 }
 
+/* Nuevos 3 cards estilo iguales */
+.card.resumen { 
+  border-left-color: #5cf6e9; /* Violeta */
+  background: linear-gradient(135deg, #ffffff, #f5f3ff);
+}
+.card.categorias { 
+  border-left-color: #ec4899; /* Rosa fuerte */
+  background: linear-gradient(135deg, #ffffff, #fdf2f8);
+}
+.card.metas { 
+  border-left-color: #14b8a6; /* Turquesa */
+  background: linear-gradient(135deg, #ffffff, #f0fdfa);
+}
+
 /* ===== BOTTOM SECTIONS ===== */
 .dash-bottom {
   display: grid;
@@ -162,24 +202,10 @@
   gap: 1.25rem;
 }
 
+/* Ya no usamos estilos distintos aquí,
+   porque ahora todos usan el mismo estilo de .card */
 .resumen, .categorias, .metas-section {
-  background: #fff;
   border-radius: 12px;
-  padding: 1.25rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  border: 1px solid #f1f5f9;
-}
-
-.resumen h4, .categorias h4, .metas-section h4 {
-  margin: 0 0 1rem 0;
-  color: #1e293b;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.resumen p {
-  margin: 0.5rem 0;
-  color: #475569;
 }
 
 /* ===== CATEGORÍAS ===== */
@@ -343,27 +369,4 @@
   .dash-bottom {
     grid-template-columns: 1fr;
   }
-}
-.card.ingresos {
-  border-top: 5px solid #4CAF50; /* Verde */
-}
-
-.card.gastos {
-  border-top: 5px solid #F44336; /* Rojo */
-}
-
-.card.balance {
-  border-top: 5px solid #2196F3; /* Azul */
-}
-
-.card.resumen {
-  border-top: 5px solid #FF9800; /* Naranja */
-}
-
-.card.categorias {
-  border-top: 5px solid #9C27B0; /* Morado */
-}
-
-.card.metas {
-  border-top: 5px solid #009688; /* Turquesa */
 }

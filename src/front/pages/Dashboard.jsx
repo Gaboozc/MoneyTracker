@@ -156,6 +156,7 @@ export default function Dashboard({ notas = [], moneda = "MXN", categorias = [] 
       </div>
 
       <div className="dash-cards">
+        {/* === Primeros 3 === */}
         <div className="card ingreso">
           <div className="card-icon" aria-hidden>💵</div>
           <div className="card-info">
@@ -197,61 +198,70 @@ export default function Dashboard({ notas = [], moneda = "MXN", categorias = [] 
             />
           </div>
         </div>
-      </div>
 
-      {/* Secciones inferiores - ahora usando DashboardCard para mantener estilo consistente */}
-      <div className="dash-bottom">
-        <DashboardCard icon="📑" title="Resumen" extraClass="resumen">
-          <p>{totalTransacciones} transacciones</p>
-          <p>
-            Promedio diario: {safeFormat(fmt, promedioDiario)}{" "}
-            <span className="muted">({diasMes} días)</span>
-          </p>
-        </DashboardCard>
+        {/* === Últimos 3 adaptados === */}
+        <div className="card resumen">
+          <div className="card-icon" aria-hidden>📑</div>
+          <div className="card-info">
+            <h4>Resumen</h4>
+            <p>{totalTransacciones} transacciones</p>
+            <p>
+              Promedio diario: {safeFormat(fmt, promedioDiario)}{" "}
+              <span className="muted">({diasMes} días)</span>
+            </p>
+          </div>
+        </div>
 
-        <DashboardCard icon="📂" title="Categorías" extraClass="categorias">
-          {categoriasCalculadas.length === 0 ? (
-            <p className="sin-datos">Sin datos</p>
-          ) : (
-            <div className="donut-chart" role="list" aria-label="Gastos por categoría">
-              {categoriasCalculadas.map((cat, i) => (
-                <div key={`${cat.nombre}-${i}`} className="cat-item" role="listitem">
-                  <span className="cat-color" style={{ background: cat.color }} aria-hidden />
-                  {cat.nombre} ({safeFormat(fmt, cat.total)})
-                </div>
-              ))}
-            </div>
-          )}
-        </DashboardCard>
-
-        {/* ✅ Sección de metas (manteniendo lógica original) */}
-        <DashboardCard icon="🎯" title="Metas" extraClass="metas">
-          {store.metas.length === 0 ? (
-            <p className="sin-datos">Sin metas</p>
-          ) : (
-            <ul className="metas-list">
-              {store.metas.map((meta) => (
-                <li key={meta.id} className={meta.cumplida ? "cumplida" : ""}>
-                  <span>{meta.titulo}</span>
-                  <div className="acciones">
-                    <button
-                      title="Marcar como cumplida"
-                      onClick={() => actions.toggleMeta(meta.id)}
-                    >
-                      ✅
-                    </button>
-                    <button
-                      title="Eliminar meta"
-                      onClick={() => actions.deleteMeta(meta.id)}
-                    >
-                      🗑
-                    </button>
+        <div className="card categorias">
+          <div className="card-icon" aria-hidden>📂</div>
+          <div className="card-info">
+            <h4>Categorías</h4>
+            {categoriasCalculadas.length === 0 ? (
+              <p className="sin-datos">Sin datos</p>
+            ) : (
+              <div className="donut-chart" role="list" aria-label="Gastos por categoría">
+                {categoriasCalculadas.map((cat, i) => (
+                  <div key={`${cat.nombre}-${i}`} className="cat-item" role="listitem">
+                    <span className="cat-color" style={{ background: cat.color }} aria-hidden />
+                    {cat.nombre} ({safeFormat(fmt, cat.total)})
                   </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </DashboardCard>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="card metas">
+          <div className="card-icon" aria-hidden>🎯</div>
+          <div className="card-info">
+            <h4>Metas</h4>
+            {store.metas.length === 0 ? (
+              <p className="sin-datos">Sin metas</p>
+            ) : (
+              <ul className="metas-list">
+                {store.metas.map((meta) => (
+                  <li key={meta.id} className={meta.cumplida ? "cumplida" : ""}>
+                    <span>{meta.titulo}</span>
+                    <div className="acciones">
+                      <button
+                        title="Marcar como cumplida"
+                        onClick={() => actions.toggleMeta(meta.id)}
+                      >
+                        ✅
+                      </button>
+                      <button
+                        title="Eliminar meta"
+                        onClick={() => actions.deleteMeta(meta.id)}
+                      >
+                        🗑
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
