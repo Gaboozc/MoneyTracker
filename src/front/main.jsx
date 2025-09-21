@@ -15,6 +15,9 @@ import { DataProvider } from "./Context/DataContext";
 // ⚠️ Componente que se muestra si falta la URL del backend
 import { BackendURL } from "./components/BackendURL";
 
+// 🌐 Proveedor de contexto para calendario y dashboard
+import { CalendarDashboardProvider } from "./Context/CalendarDashboardContext";
+
 const Main = () => {
   // 🔍 Verifica si la variable de entorno VITE_BACKEND_URL está definida
   const backendURL = import.meta.env.VITE_BACKEND_URL;
@@ -35,8 +38,11 @@ const Main = () => {
       <StoreProvider>
         {/* 📦 Proveedor de datos específicos con useState */}
         <DataProvider>
-          {/* 🧭 Proveedor de rutas para navegación */}
-          <RouterProvider router={router} />
+          {/* 🌐 Proveedor de contexto para calendario y dashboard */}
+          <CalendarDashboardProvider>
+            {/* 🧭 Proveedor de rutas para navegación */}
+            <RouterProvider router={router} />
+          </CalendarDashboardProvider>
         </DataProvider>
       </StoreProvider>
     </React.StrictMode>

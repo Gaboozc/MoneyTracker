@@ -1,75 +1,108 @@
 /* 🌟 Contenedor principal */
 .metas-container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 1rem;
-  font-family: "Segoe UI", sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0.5rem 1.5rem 1.5rem;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 /* 🧠 Encabezado */
 .metas-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .metas-header h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.75rem;
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-weight: 600;
 }
 
 .metas-header p {
-  font-size: 1rem;
-  color: #555;
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
 }
 
 /* 🧩 Tarjetas base */
 .card {
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background: white;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 /* 🎨 Colores por tipo */
 .blue {
-  background-color: #e0f0ff;
+  border-color: #3b82f6;
+  background-color: #f0f7ff;
 }
 
 .green {
-  background-color: #e6ffe0;
+  border-color: #22c55e;
+  background-color: #f0fdf4;
 }
 
 .yellow {
-  background-color: #fff9d6;
+  border-color: #eab308;
+  background-color: #fefce8;
 }
 
 /* ➕ Campo nueva meta */
 .metas-add {
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   align-items: center;
 }
 
 .metas-add input {
   flex: 1;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.metas-add input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .metas-add button {
-  padding: 0.5rem 1rem;
-  background-color: #007acc;
+  padding: 0.6rem 1.2rem;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .metas-add button:hover {
-  background-color: #005fa3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
 }
 
 /* 📈 Progreso */

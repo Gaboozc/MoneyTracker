@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
+import { useCalendarDashboard } from "../Context/CalendarDashboardContext";
 import PropTypes from "prop-types";
 import { useGlobalReducer } from "../store"; // ✅ necesario para acceder a metas
 import "../styles/Dashboard.css";
@@ -73,20 +74,17 @@ function DashboardCard({ icon, title, children, extraClass = "" }) {
 /* Componente principal */
 /* ----------------------------------------------------------------------------- */
 
-export default function Dashboard({ notas = [], moneda = "MXN", categorias = [] }) {
-  const { store, actions } = useGlobalReducer(); // ✅ acceso al store global
-  const [mesVisible, setMesVisible] = useState("");
+export default function Dashboard({ moneda = "MXN", categorias = [] }) {
+  const { store, actions } = useGlobalReducer();
+  const { notas, mesSeleccionado, setMesSeleccionado } = useCalendarDashboard();
   const [mesesDisponibles, setMesesDisponibles] = useState([]);
-
   const fmt = useMemo(() => buildFormatter(moneda), [moneda]);
 
   useEffect(() => {
     if (!Array.isArray(notas) || notas.length === 0) {
       setMesesDisponibles([]);
-      setMesVisible("");
       return;
     }
-
     const setMeses = new Set();
     for (const n of notas) {
       if (n?.fecha && isValidISODate(n.fecha)) {
@@ -94,18 +92,16 @@ export default function Dashboard({ notas = [], moneda = "MXN", categorias = [] 
         if (mm) setMeses.add(mm);
       }
     }
-
     const ordenados = Array.from(setMeses).sort((a, b) => b.localeCompare(a));
     setMesesDisponibles(ordenados);
-    setMesVisible((prev) => (prev && ordenados.includes(prev) ? prev : ordenados[0] || ""));
   }, [notas]);
 
   const notasFiltradas = useMemo(() => {
-    if (!mesVisible) return [];
+    if (!mesSeleccionado) return [];
     return (Array.isArray(notas) ? notas : []).filter(
-      (n) => n?.fecha && isValidISODate(n.fecha) && toYYYYMM(n.fecha) === mesVisible
+      (n) => n?.fecha && isValidISODate(n.fecha) && toYYYYMM(n.fecha) === mesSeleccionado
     );
-  }, [notas, mesVisible]);
+  }, [notas, mesSeleccionado]);
 
   const { ingresos, gastos, balance } = useMemo(() => {
     const ingresos = sumByType(notasFiltradas, "ingreso");
@@ -114,10 +110,11 @@ export default function Dashboard({ notas = [], moneda = "MXN", categorias = [] 
   }, [notasFiltradas]);
 
   const { diasMes, promedioDiario } = useMemo(() => {
-    const dias = getDaysInMonth(mesVisible);
-    const promedio = dias ? balance / dias : 0;
+    const dias = getDaysInMonth(mesSeleccionado);
+    // Solo consideramos los egresos para el promedio diario
+    const promedio = dias ? (gastos / dias) : 0;
     return { diasMes: dias, promedioDiario: promedio };
-  }, [mesVisible, balance]);
+  }, [mesSeleccionado, gastos]);
 
   const categoriasCalculadas = useMemo(() => {
     const base = Array.isArray(categorias) && categorias.length > 0
@@ -139,8 +136,8 @@ export default function Dashboard({ notas = [], moneda = "MXN", categorias = [] 
         <select
           id="mes-selector"
           className="mes-selector"
-          value={mesVisible}
-          onChange={(e) => setMesVisible(e.target.value)}
+          value={mesSeleccionado}
+          onChange={(e) => setMesSeleccionado(e.target.value)}
           aria-label="Selecciona mes"
         >
           {mesesDisponibles.length === 0 ? (
@@ -165,8 +162,8 @@ export default function Dashboard({ notas = [], moneda = "MXN", categorias = [] 
             <div
               className="mini-chart ingreso-chart"
               data-total={ingresos}
-              data-mes={mesVisible}
-              title={`Ingresos en ${getMonthLabel(mesVisible)}`}
+              data-mes={mesSeleccionado}
+              title={`Ingresos en ${getMonthLabel(mesSeleccionado)}`}
             />
           </div>
         </div>
@@ -179,8 +176,8 @@ export default function Dashboard({ notas = [], moneda = "MXN", categorias = [] 
             <div
               className="mini-chart gasto-chart"
               data-total={gastos}
-              data-mes={mesVisible}
-              title={`Gastos en ${getMonthLabel(mesVisible)}`}
+              data-mes={mesSeleccionado}
+              title={`Gastos en ${getMonthLabel(mesSeleccionado)}`}
             />
           </div>
         </div>
@@ -193,8 +190,8 @@ export default function Dashboard({ notas = [], moneda = "MXN", categorias = [] 
             <div
               className="mini-chart balance-chart"
               data-total={balance}
-              data-mes={mesVisible}
-              title={`Balance en ${getMonthLabel(mesVisible)}`}
+              data-mes={mesSeleccionado}
+              title={`Balance en ${getMonthLabel(mesSeleccionado)}`}
             />
           </div>
         </div>
@@ -203,8 +200,8 @@ export default function Dashboard({ notas = [], moneda = "MXN", categorias = [] 
         <div className="card resumen">
           <div className="card-icon" aria-hidden>📑</div>
           <div className="card-info">
-            <h4>Resumen</h4>
-            <p>{totalTransacciones} transacciones</p>
+            <h4>Resumen de Gastos</h4>
+            <p>{notasFiltradas.filter(n => n.tipo === "egreso").length} gastos</p>
             <p>
               Promedio diario: {safeFormat(fmt, promedioDiario)}{" "}
               <span className="muted">({diasMes} días)</span>

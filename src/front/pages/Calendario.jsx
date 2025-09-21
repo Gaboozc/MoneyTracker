@@ -19,6 +19,7 @@ import React, {
   useState,
   useEffect,
 } from "react";
+import { useCalendarDashboard } from "../Context/CalendarDashboardContext";
 
 import Calendar from "react-calendar";                 // Librería externa del calendario
 import "react-calendar/dist/Calendar.css";             // Estilos base de react-calendar
@@ -178,9 +179,8 @@ const DetalleDiaModal = ({
         {/* Balance acumulado hasta esta fecha */}
         <div className="modal-summary">
           <div
-            className={`sum-item balance ${
-              balanceAcumulado >= 0 ? "positivo" : "negativo"
-            }`}
+            className={`sum-item balance ${balanceAcumulado >= 0 ? "positivo" : "negativo"
+              }`}
           >
             <span>Balance acumulado</span>
             <strong>{format(balanceAcumulado)}</strong>
@@ -206,6 +206,26 @@ const DetalleDiaModal = ({
             </button>
           </div>
 
+          <div className="form-group">
+            <label htmlFor="categoria-select">Categoría</label>
+            <select
+              id="categoria-select"
+              value={categoria}
+              onChange={(e) => setCategoria(e.target.value)}
+              className="input-select"
+            >
+              <option value="">Selecciona categoría</option>
+              <option value="Comida">🍔 Comida</option>
+              <option value="Vivienda">🏠 Vivienda</option>
+              <option value="Transporte">🚗 Transporte</option>
+              <option value="Entretenimiento">🎉 Entretenimiento</option>
+              <option value="Salud">💊 Salud</option>
+              <option value="Servicios">🧾 Servicios</option>
+              <option value="Trabajo">💼 Trabajo</option>
+              <option value="Ahorro">💰 Ahorro</option>
+            </select>
+          </div>
+
           <input
             type="number"
             step="0.01"
@@ -215,12 +235,7 @@ const DetalleDiaModal = ({
             required
           />
 
-          <input
-            type="text"
-            value={categoria}
-            onChange={(e) => setCategoria(e.target.value)}
-            placeholder="Categoría"
-          />
+
 
           <input
             type="text"
@@ -269,22 +284,9 @@ const DetalleDiaModal = ({
 // COMPONENTE PRINCIPAL: Calendario
 // ============================================================================
 const Calendario = () => {
-  // --------------------------------------------------------------------------
-  // ESTADOS PERSISTENTES: notas y moneda
-  // --------------------------------------------------------------------------
-  const [notas, setNotas] = useState(() => {
-    try {
-      const raw = localStorage.getItem("notas_calendario");
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  useEffect(() => {
-    localStorage.setItem("notas_calendario", JSON.stringify(notas));
-  }, [notas]);
-
+  // Usar contexto global para notas y mes seleccionado
+  const { notas, setNotas, mesSeleccionado, setMesSeleccionado } = useCalendarDashboard();
+  // Estado local para moneda y UI
   const [moneda, setMoneda] = useState(() => {
     try {
       return localStorage.getItem("moneda_calendario") || "MXN";
@@ -292,14 +294,9 @@ const Calendario = () => {
       return "MXN";
     }
   });
-
   useEffect(() => {
     localStorage.setItem("moneda_calendario", moneda);
   }, [moneda]);
-
-  // --------------------------------------------------------------------------
-  // ESTADO DE UI: selección de fecha y modal
-  // --------------------------------------------------------------------------
   const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
 
@@ -438,16 +435,14 @@ const Calendario = () => {
 
       <div className="calendario-wrap">
         <Calendar
-          // Localización opcional (si tienes Intl y locale correctos)
           locale="es-MX"
-
-          // Al hacer clic en un día, abrimos el modal de detalle
           onClickDay={(date) => {
             setFechaSeleccionada(date);
             setMostrarModal(true);
+            // Actualiza el mes seleccionado en el contexto global
+            const yyyyMm = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+            setMesSeleccionado(yyyyMm);
           }}
-
-          // Contenido visual adicional (puntos)
           tileContent={tileContent}
         />
       </div>

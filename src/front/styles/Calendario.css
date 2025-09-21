@@ -10,18 +10,37 @@
 
 /* ----- Contenedor general ----- */
 .calendario-container {
-  padding: 1rem;
+  padding: 0.5rem 1rem 1rem;
   max-width: 900px;
   margin: 0 auto;
+}
+
+/* ----- Modal y Backdrop ----- */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+.modal-content {
+  position: relative;
+  z-index: 999;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
 
 /* ----- Ajustes base del calendario ----- */
 .calendario-wrap .react-calendar {
   width: 100%;
-  border: 1px solid #cfcfcf;   /* Borde exterior del calendario */
+  border: 1px solid #cfcfcf; /* Borde exterior del calendario */
   border-radius: 8px;
   font-family: inherit;
-  overflow: hidden;            /* Para que el borde se vea limpio */
+  overflow: hidden; /* Para que el borde se vea limpio */
 }
 
 /* ----- Usar grid para las celdas del mes ----- */
@@ -36,9 +55,9 @@
 .react-calendar__month-view .react-calendar__tile {
   border-right: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
-  min-height: 92px;                  /* Altura razonable de cada celda */
-  padding: 0.35rem 0.4rem 0.4rem;    /* Espaciado interno */
-  display: grid;                     /* Para acomodar el contenido verticalmente */
+  min-height: 92px; /* Altura razonable de cada celda */
+  padding: 0.35rem 0.4rem 0.4rem; /* Espaciado interno */
+  display: grid; /* Para acomodar el contenido verticalmente */
   grid-template-rows: auto 1fr auto; /* Fecha arriba, espacio medio, puntos abajo */
   align-content: start;
   background: #fff;
@@ -97,10 +116,10 @@
 }
 
 .punto-ingreso {
-  background-color: #2e7d32;    /* verde */
+  background-color: #2e7d32; /* verde */
 }
 .punto-egreso {
-  background-color: #c62828;    /* rojo */
+  background-color: #c62828; /* rojo */
 }
 
 /* =============================================================================
@@ -108,23 +127,47 @@
    ============================================================================= */
 .modal-overlay {
   position: fixed;
-  inset: 0;                      /* top/left/right/bottom: 0 */
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0; /* top/left/right/bottom: 0 */
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
 }
 
 .modal-card {
   background: white;
-  padding: 1rem;
-  border-radius: 10px;
+  padding: 1.25rem;
+  border-radius: 12px;
   width: 92%;
   max-width: 560px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+  transform-origin: center center;
+  animation: scaleIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ----- Header ----- */
@@ -254,17 +297,23 @@
   margin-top: 0.3rem;
 }
 /* ----- Hacer negros solo los días de lunes a viernes del mes actual ----- */
-.react-calendar__month-view__days__day:not(.react-calendar__month-view__days__day--neighboringMonth):not(.react-calendar__month-view__days__day--weekend) {
+.react-calendar__month-view__days__day:not(
+    .react-calendar__month-view__days__day--neighboringMonth
+  ):not(.react-calendar__month-view__days__day--weekend) {
   color: #000000 !important;
 }
 
 /* Para el día actual (now) que sea de lunes a viernes */
-.react-calendar__tile--now:not(.react-calendar__month-view__days__day--weekend) {
+.react-calendar__tile--now:not(
+    .react-calendar__month-view__days__day--weekend
+  ) {
   color: #000000 !important;
 }
 
 /* Para el día seleccionado (active) que sea de lunes a viernes */
-.react-calendar__tile--active:not(.react-calendar__month-view__days__day--weekend) {
+.react-calendar__tile--active:not(
+    .react-calendar__month-view__days__day--weekend
+  ) {
   color: #000000 !important;
 }
 /* ----- Corregir colores en los menús de navegación (mes y año) ----- */

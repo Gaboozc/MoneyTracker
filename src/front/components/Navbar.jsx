@@ -1,11 +1,31 @@
 import React from "react";
+import prismaLogo from "../../logo/prisma.png";
 import { NavLink } from "react-router-dom";
 import "../styles/Navbar.css";
 
 const Navbar = () => {
   return (
     <nav className="navbar">
-      <div className="navbar__logo">Atlas Finances</div>
+      <div className="navbar__logo">
+        <img
+          src={prismaLogo}
+          alt="Prisma"
+          style={{
+            height: "40px",
+            width: "auto",
+            marginRight: "12px"
+          }}
+        />
+        <span style={{
+          fontSize: "1.5rem",
+          fontWeight: "bold",
+          background: "linear-gradient(45deg, #00c6ff, #0072ff)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent"
+        }}>
+          Prisma
+        </span>
+      </div>
       <ul className="navbar__links">
         <li>
           <NavLink to="/dashboard" className="navlink" activeclassname="active">
@@ -29,17 +49,17 @@ const Navbar = () => {
         </li>
         <li>
           <NavLink to="/reflexion" className="navlink" activeclassname="active">
-            <i className="fas fa-comment-dots nav-icon"></i> Reflexión
+            <i className="fas fa-lightbulb nav-icon"></i> Reflexión
           </NavLink>
         </li>
         <li>
-          <NavLink to="/resumen-anual" className="navlink" activeclassname="active">
-            <i className="fas fa-calendar-check nav-icon"></i> Resumen Anual
+          <NavLink to="/budgeting" className="navlink" activeclassname="active">
+            <i className="fas fa-wallet nav-icon"></i> Presupuesto
           </NavLink>
         </li>
         <li>
-          <NavLink to="/exportar" className="navlink" activeclassname="active">
-            <i className="fas fa-file-export nav-icon"></i> Exportar
+          <NavLink to="/resumen" className="navlink" activeclassname="active">
+            <i className="fas fa-chart-bar nav-icon"></i> Resumen
           </NavLink>
         </li>
       </ul>

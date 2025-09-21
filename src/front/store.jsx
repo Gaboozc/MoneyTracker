@@ -13,6 +13,11 @@ export const initialStore = () => {
     historialReflexiones: [], // 🆕 siempre como array
     ingresos: 0,
     gastos: 0,
+    auditoria: [], // 🆕 log de actividad
+    notasTransacciones: {}, // 🆕 comentarios por transacción
+    alertas: [], // 🆕 alertas y anomalías
+    comparativas: {}, // 🆕 datos para comparativas
+    visualizaciones: {}, // 🆕 datos para visualización avanzada
     // Mantén aquí cualquier otra propiedad original que uses
   };
 
@@ -39,13 +44,39 @@ export const initialStore = () => {
 // -------------------------------
 export default function storeReducer(store, action = {}) {
   switch (action.type) {
+    // ==== Auditoría y log de actividad ====
+    case "add_auditoria":
+      return { ...store, auditoria: [action.payload, ...store.auditoria] };
+
+    // ==== Notas y comentarios ====
+    case "add_nota_transaccion":
+      return {
+        ...store,
+        notasTransacciones: {
+          ...store.notasTransacciones,
+          [action.payload.id]: [
+            ...(store.notasTransacciones[action.payload.id] || []),
+            action.payload.nota
+          ]
+        }
+      };
+
+    // ==== Alertas y anomalías ====
+    case "add_alerta":
+      return { ...store, alertas: [action.payload, ...store.alertas] };
+
+    // ==== Comparativas ====
+    case "set_comparativas":
+      return { ...store, comparativas: action.payload };
+
+    // ==== Visualización avanzada ====
+    case "set_visualizaciones":
+      return { ...store, visualizaciones: action.payload };
     // ==== Acciones originales ====
     case "set_message":
       return { ...store, message: action.payload };
-
     case "add_todo":
       return { ...store, todos: [...store.todos, action.payload] };
-
     case "update_todo":
       return {
         ...store,
@@ -53,20 +84,16 @@ export default function storeReducer(store, action = {}) {
           todo.id === action.payload.id ? { ...todo, ...action.payload } : todo
         )
       };
-
     case "delete_todo":
       return {
         ...store,
         todos: store.todos.filter((todo) => todo.id !== action.payload)
       };
-
     // ==== Metas ====
     case "set_metas":
       return { ...store, metas: action.payload };
-
     case "add_meta":
       return { ...store, metas: [...store.metas, action.payload] };
-
     case "update_meta":
       return {
         ...store,
@@ -74,13 +101,11 @@ export default function storeReducer(store, action = {}) {
           meta.id === action.payload.id ? { ...meta, ...action.payload } : meta
         )
       };
-
     case "delete_meta":
       return {
         ...store,
         metas: store.metas.filter((meta) => meta.id !== action.payload)
       };
-
     case "toggle_meta": // ✅ nueva acción para marcar como cumplida
       return {
         ...store,
@@ -90,18 +115,14 @@ export default function storeReducer(store, action = {}) {
             : meta
         )
       };
-
     // ==== Finanzas ====
     case "set_ingresos":
       return { ...store, ingresos: action.payload };
-
     case "set_gastos":
       return { ...store, gastos: action.payload };
-
     // ==== Reflexiones ====
     case "set_reflexion":
       return { ...store, reflexion: action.payload };
-
     case "add_reflexion":
       return {
         ...store,
@@ -116,7 +137,6 @@ export default function storeReducer(store, action = {}) {
             : [])
         ]
       };
-
     case "delete_reflexion":
       return {
         ...store,
@@ -124,10 +144,32 @@ export default function storeReducer(store, action = {}) {
           (ref) => ref.id !== action.payload
         )
       };
-
+    // ==== Auditoría y log de actividad ====
+    case "add_auditoria":
+      return { ...store, auditoria: [action.payload, ...store.auditoria] };
+    // ==== Notas y comentarios ====
+    case "add_nota_transaccion":
+      return {
+        ...store,
+        notasTransacciones: {
+          ...store.notasTransacciones,
+          [action.payload.id]: [
+            ...(store.notasTransacciones[action.payload.id] || []),
+            action.payload.nota
+          ]
+        }
+      };
+    // ==== Alertas y anomalías ====
+    case "add_alerta":
+      return { ...store, alertas: [action.payload, ...store.alertas] };
+    // ==== Comparativas ====
+    case "set_comparativas":
+      return { ...store, comparativas: action.payload };
+    // ==== Visualización avanzada ====
+    case "set_visualizaciones":
+      return { ...store, visualizaciones: action.payload };
     // ==== Otros casos que ya tuvieras ====
     // ...
-
     default:
       throw Error("Unknown action.");
   }
@@ -171,6 +213,21 @@ export const GlobalProvider = ({ children }) => {
       dispatch({ type: "add_reflexion", payload: texto }),
     deleteReflexion: (id) =>
       dispatch({ type: "delete_reflexion", payload: id }),
+
+    // ==== Auditoría y log de actividad ====
+    addAuditoria: (log) => dispatch({ type: "add_auditoria", payload: log }),
+
+    // ==== Notas y comentarios ====
+    addNotaTransaccion: (id, nota) => dispatch({ type: "add_nota_transaccion", payload: { id, nota } }),
+
+    // ==== Alertas y anomalías ====
+    addAlerta: (alerta) => dispatch({ type: "add_alerta", payload: alerta }),
+
+    // ==== Comparativas ====
+    setComparativas: (data) => dispatch({ type: "set_comparativas", payload: data }),
+
+    // ==== Visualización avanzada ====
+    setVisualizaciones: (data) => dispatch({ type: "set_visualizaciones", payload: data }),
 
     // ==== Otras acciones originales ====
     // ...

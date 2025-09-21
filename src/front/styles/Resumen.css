@@ -1,0 +1,126 @@
+/* =============================================================================
+   Resumen.css
+   ============================================================================= */
+
+.resumen-container {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.resumen-header {
+  margin-bottom: 2rem;
+}
+
+.resumen-header h1 {
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+/* Selector de período */
+.periodo-selector {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.periodo-selector select {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  font-size: 0.95rem;
+  min-width: 120px;
+}
+
+/* Grid de cards */
+.resumen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.card h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+/* Listas dentro de cards */
+.card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.card li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.card li:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Colores para valores */
+.success {
+  color: #059669;
+  font-weight: 600;
+}
+
+.danger {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* Botones de descarga */
+.botones-descarga {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.btn-descarga {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.btn-descarga:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .periodo-selector {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .resumen-grid {
+    grid-template-columns: 1fr;
+  }
+}
