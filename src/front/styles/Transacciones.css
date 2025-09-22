@@ -1,0 +1,259 @@
+.transacciones-container {
+  max-width: 1400px;
+  margin: 2em auto;
+  background: linear-gradient(135deg, #f8fafc 60%, #e0e7ff 100%);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(60, 60, 120, 0.12);
+  padding: 2em;
+}
+
+.transacciones-container header {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+.transacciones-container h1 {
+  font-size: 2.2em;
+  font-weight: 700;
+  color: #4f46e5;
+  margin-bottom: 0.2em;
+  letter-spacing: 1px;
+}
+
+.transacciones-container p {
+  color: #64748b;
+  font-size: 1.1em;
+}
+
+/* Layout dividido */
+.split-layout {
+  display: flex;
+  gap: 2em;
+  height: calc(100vh - 250px);
+  min-height: 600px;
+}
+
+/* Lista de transacciones (lado izquierdo) */
+.transacciones-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+.transaccion-item {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(80, 80, 120, 0.08);
+  padding: 1.2em 1.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  transition: all 0.2s ease-in-out;
+}
+
+.transaccion-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 24px rgba(80, 80, 120, 0.16);
+}
+
+.transaccion-fecha {
+  font-size: 1em;
+  color: #6366f1;
+  font-weight: 500;
+  margin-bottom: 0.2em;
+}
+
+.transaccion-info {
+  display: flex;
+  align-items: center;
+  gap: 1.2em;
+  font-size: 1.1em;
+}
+
+.transaccion-categoria {
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 0.2em 0.7em;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.transaccion-detalle {
+  color: #334155;
+  font-style: italic;
+}
+
+.transaccion-monto {
+  font-weight: 700;
+  font-size: 1.15em;
+  padding: 0.2em 0.7em;
+  border-radius: 8px;
+}
+
+.transaccion-monto.ingreso {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.transaccion-monto.egreso {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Sección de gráficas (lado derecho) */
+.charts-section {
+  flex: 1;
+  background: white;
+  border-radius: 14px;
+  padding: 1.5em;
+  box-shadow: 0 2px 12px rgba(80, 80, 120, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.charts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1em;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.chart-toggle {
+  display: flex;
+  gap: 0.5em;
+}
+
+.chart-toggle button {
+  background: #e0e7ff;
+  color: #4f46e5;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chart-toggle button.active {
+  background: #4f46e5;
+  color: white;
+}
+
+.chart-toggle button:hover {
+  opacity: 0.9;
+}
+
+.chart-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  position: relative;
+  padding: 1em;
+}
+
+.notas-independientes {
+  margin-top: 0.5em;
+  padding-left: 0.5em;
+}
+
+.notas-independientes ul {
+  margin: 0 0 0.5em 0;
+  padding: 0;
+  list-style: disc inside;
+  color: #6366f1;
+}
+
+.notas-independientes input {
+  width: 100%;
+  padding: 0.5em;
+  border-radius: 8px;
+  border: 1px solid #c7d2fe;
+  font-size: 1em;
+  margin-top: 0.2em;
+  transition: border 0.2s;
+}
+
+.notas-independientes input:focus {
+  border: 1.5px solid #6366f1;
+  outline: none;
+}
+
+/* Sección de gráficos (lado derecho) */
+.graficos-section {
+  flex: 1;
+  background: white;
+  border-radius: 14px;
+  padding: 1.5em;
+  box-shadow: 0 2px 12px rgba(80, 80, 120, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.graficos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5em;
+}
+
+.graficos-header h2 {
+  font-size: 1.5em;
+  color: #4f46e5;
+  margin: 0;
+}
+
+.graficos-header button {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.graficos-header button:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+}
+
+.grafico-container {
+  flex: 1;
+  position: relative;
+}
+
+.no-resultados {
+  text-align: center;
+  color: #64748b;
+  font-size: 1.2em;
+  margin-top: 2em;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .split-layout {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .graficos-section {
+    height: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .transacciones-container {
+    margin: 1em;
+    padding: 1em;
+  }
+
+  .graficos-header {
+    flex-direction: column;
+    gap: 1em;
+  }
+}
