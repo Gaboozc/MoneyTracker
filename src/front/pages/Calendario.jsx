@@ -1,19 +1,3 @@
-// ============================================================================
-// Calendario.jsx
-// ============================================================================
-// - Usa react-calendar para la vista mensual.
-// - Persiste notas y moneda en localStorage.
-// - Muestra un modal con:
-//     * Balance acumulado hasta la fecha seleccionada (no solo el del día).
-//     * Formulario para agregar registros (ingreso/egreso).
-//     * Lista de movimientos del día.
-// - En el calendario:
-//     * NO se muestra saldo en cada celda (solo puntos de actividad).
-//     * Se muestran divisiones tipo cuadrícula mediante CSS.
-// - Sin botón superior de "Agregar transacción", como pediste.
-// ============================================================================
-
-// ====== IMPORTS ======
 import React, {
   useMemo,
   useState,
@@ -21,19 +5,14 @@ import React, {
 } from "react";
 import { useCalendarDashboard } from "../Context/CalendarDashboardContext";
 
-import Calendar from "react-calendar";                 // Librería externa del calendario
-import "react-calendar/dist/Calendar.css";             // Estilos base de react-calendar
-import "../styles/Calendario.css";                     // Estilos personalizados (ver Parte 3)
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import "../styles/Calendario.css";
 
 // ============================================================================
 // FUNCIONES AUXILIARES
 // ============================================================================
 
-/**
- * dateKey
- * Normaliza cualquier Date a un string AAAA-MM-DD en UTC.
- * Esto evita desfases de zona horaria al agrupar por día.
- */
 const dateKey = (d) => {
   const y = d.getFullYear();
   const m = d.getMonth();
@@ -42,58 +21,40 @@ const dateKey = (d) => {
   return utc.toISOString().slice(0, 10);
 };
 
-/**
- * Helpers para operar claves de fecha en horario LOCAL sin desfases.
- * - keyFromLocalDate: Date local -> "YYYY-MM-DD"
- * - dateFromKeyLocal: "YYYY-MM-DD" -> Date local (00:00 local)
- * - addDaysKeyLocal: suma días a una clave "YYYY-MM-DD"
- */
 const keyFromLocalDate = (d) => {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
 };
+
 const dateFromKeyLocal = (key) => {
   const [y, m, d] = key.split("-").map(Number);
-  return new Date(y, m - 1, d); // 00:00 local
-};
-const addDaysKeyLocal = (key, days = 1) => {
-  const dt = dateFromKeyLocal(key);
-  dt.setDate(dt.getDate() + days);
-  return keyFromLocalDate(dt);
+  return new Date(y, m - 1, d);
 };
 
-/**
- * generateId
- * Crea un ID único para cada registro usando timestamp + fragmento aleatorio.
- */
 const generateId = () =>
   `${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
 
 // ============================================================================
 // COMPONENTE: DetalleDiaModal
-// - Recibe "balanceAcumulado" desde el padre (Calendario)
-// - NO calcula aquí el acumulado; solo lo muestra para evitar inconsistencias.
 // ============================================================================
 const DetalleDiaModal = ({
-  fecha,               // Date del día seleccionado
-  notas,               // Movimientos de ese día (array)
-  onClose,             // Cierra el modal
-  onAdd,               // Agrega un movimiento
-  onDelete,            // Elimina un movimiento por id
-  moneda,              // Código de moneda actual
-  setMoneda,           // Setter para cambiar moneda global
-  balanceAcumulado,    // Balance acumulado hasta esta fecha (calculado arriba)
+  fecha,
+  notas,
+  onClose,
+  onAdd,
+  onDelete,
+  moneda,
+  setMoneda,
+  balanceAcumulado,
 }) => {
-  // ----- Estados del formulario -----
-  const [tipo, setTipo] = useState("egreso"); // "ingreso" | "egreso"
+  const [tipo, setTipo] = useState("egreso");
   const [monto, setMonto] = useState("");
   const [categoria, setCategoria] = useState("");
   const [detalle, setDetalle] = useState("");
   const [error, setError] = useState("");
 
-  // ----- Formateador de moneda (dependiente de 'moneda') -----
   const formatter = useMemo(
     () =>
       new Intl.NumberFormat("es-MX", {
@@ -102,9 +63,9 @@ const DetalleDiaModal = ({
       }),
     [moneda]
   );
+  
   const format = (n) => formatter.format(n ?? 0);
 
-  // ----- Fecha legible para el encabezado del modal -----
   const fechaLegible = useMemo(
     () =>
       fecha.toLocaleDateString("es-MX", {
@@ -116,7 +77,6 @@ const DetalleDiaModal = ({
     [fecha]
   );
 
-  // ----- Limpia campos del formulario -----
   const limpiar = () => {
     setMonto("");
     setCategoria("");
@@ -124,37 +84,30 @@ const DetalleDiaModal = ({
     setError("");
   };
 
-  // ----- Submit de nuevo movimiento -----
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Normaliza coma a punto, parsea y valida
     const num = Number.parseFloat(String(monto).replace(",", "."));
     if (!Number.isFinite(num) || num <= 0) {
       setError("Ingresa un monto válido mayor a 0.");
       return;
     }
 
-    // Construye el nuevo registro
     onAdd({
       id: generateId(),
       tipo,
       monto: Math.round(num * 100) / 100,
-      categoria:
-        categoria?.trim() || (tipo === "ingreso" ? "Ingreso" : "Egreso"),
+      categoria: categoria?.trim() || (tipo === "ingreso" ? "Ingreso" : "Egreso"),
       detalle: detalle?.trim() || "",
-      fecha: dateKey(fecha), // se guarda la fecha normalizada
+      fecha: dateKey(fecha),
     });
 
-    // Limpia campos tras agregar
     limpiar();
   };
 
-  // ----- Render del modal -----
   return (
     <div className="modal-overlay">
       <div className="modal-card">
-        {/* Cabecera con fecha y cerrar */}
         <div className="modal-header">
           <h3>{fechaLegible}</h3>
           <button className="modal-close" onClick={onClose}>
@@ -162,7 +115,6 @@ const DetalleDiaModal = ({
           </button>
         </div>
 
-        {/* Selector de moneda */}
         <div className="moneda-selector">
           <label>Moneda: </label>
           <select
@@ -172,22 +124,18 @@ const DetalleDiaModal = ({
             <option value="MXN">MXN — Peso mexicano</option>
             <option value="USD">USD — Dólar estadounidense</option>
             <option value="EUR">EUR — Euro</option>
-            {/* Agrega más si las necesitas */}
           </select>
         </div>
 
-        {/* Balance acumulado hasta esta fecha */}
         <div className="modal-summary">
           <div
-            className={`sum-item balance ${balanceAcumulado >= 0 ? "positivo" : "negativo"
-              }`}
+            className={`sum-item balance ${balanceAcumulado >= 0 ? "positivo" : "negativo"}`}
           >
             <span>Balance acumulado</span>
             <strong>{format(balanceAcumulado)}</strong>
           </div>
         </div>
 
-        {/* Formulario para agregar movimiento */}
         <form className="form-agregar" onSubmit={handleSubmit}>
           <div className="tipo-seleccion">
             <button
@@ -235,8 +183,6 @@ const DetalleDiaModal = ({
             required
           />
 
-
-
           <input
             type="text"
             value={detalle}
@@ -251,7 +197,6 @@ const DetalleDiaModal = ({
           </button>
         </form>
 
-        {/* Lista de registros del día */}
         <div className="lista-registros">
           {notas.length === 0 ? (
             <p>No hay registros.</p>
@@ -284,9 +229,8 @@ const DetalleDiaModal = ({
 // COMPONENTE PRINCIPAL: Calendario
 // ============================================================================
 const Calendario = () => {
-  // Usar contexto global para notas y mes seleccionado
   const { notas, setNotas, mesSeleccionado, setMesSeleccionado } = useCalendarDashboard();
-  // Estado local para moneda y UI
+  
   const [moneda, setMoneda] = useState(() => {
     try {
       return localStorage.getItem("moneda_calendario") || "MXN";
@@ -294,9 +238,11 @@ const Calendario = () => {
       return "MXN";
     }
   });
+  
   useEffect(() => {
     localStorage.setItem("moneda_calendario", moneda);
   }, [moneda]);
+  
   const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
 
@@ -305,107 +251,26 @@ const Calendario = () => {
   // --------------------------------------------------------------------------
   const notasPorFecha = useMemo(() => {
     const map = new Map();
-
     for (const n of notas) {
       if (!n.fecha) continue;
       if (!map.has(n.fecha)) map.set(n.fecha, []);
       map.get(n.fecha).push(n);
     }
-
     return map;
   }, [notas]);
 
   // --------------------------------------------------------------------------
-  // BALANCE ACUMULADO: se propaga a días sin movimientos
-  //   - Creamos un Map fecha -> balance acumulado hasta esa fecha (incluida).
-  //   - Iteramos día por día desde la primera nota hasta la última o la fecha
-  //     seleccionada (la mayor), en horario LOCAL para evitar desfases.
-  //   - Luego, para fechas fuera de ese rango, resolvemos buscando el último
-  //     saldo previo disponible (ver getBalanceAcumuladoParaFecha()).
+  // BALANCE TOTAL - SIEMPRE EL MISMO PARA TODAS LAS FECHAS
   // --------------------------------------------------------------------------
-  const acumuladoPorFecha = useMemo(() => {
-    const acc = new Map();
-    let balance = 0;
-
-    if (notas.length === 0) return acc;
-
-    // Ordenamos por clave de fecha (YYYY-MM-DD) ascendente
-    const ordenadas = [...notas].sort((a, b) => (a.fecha < b.fecha ? -1 : a.fecha > b.fecha ? 1 : 0));
-
-    // Determinamos el rango en términos de CLAVE (local)
-    const primeraClave = ordenadas[0].fecha;
-    const ultimaClaveNotas = ordenadas[ordenadas.length - 1].fecha;
-    const claveSeleccionada = fechaSeleccionada ? keyFromLocalDate(fechaSeleccionada) : null;
-    const ultimaClave = claveSeleccionada && claveSeleccionada > ultimaClaveNotas ? claveSeleccionada : ultimaClaveNotas;
-
-    // Iteración día a día usando claves locales, evitando Date UTC
-    for (let key = primeraClave; key <= ultimaClave; key = addDaysKeyLocal(key, 1)) {
-      // Movimientos del día "key"
-      const movimientos = ordenadas.filter((n) => n.fecha === key);
-
-      // Sumamos ingresos/egresos de ese día
-      for (const n of movimientos) {
-        const monto = n.monto ?? 0;
-        balance += n.tipo === "ingreso" ? monto : -monto;
-      }
-
-      // Guardamos el balance acumulado al cierre de ese día
-      acc.set(key, balance);
-    }
-
-    return acc;
-  }, [notas, fechaSeleccionada]);
-
-  // Lista de fechas del mapa acumulado, ordenadas ascendente (para búsquedas)
-  const clavesAcumuladoAsc = useMemo(() => {
-    const arr = Array.from(acumuladoPorFecha.keys());
-    arr.sort(); // YYYY-MM-DD se ordena lexicográficamente bien
-    return arr;
-  }, [acumuladoPorFecha]);
-
-  /**
-   * getBalanceAcumuladoParaFecha
-   * - Devuelve el balance acumulado para cualquier fecha.
-   * - Si no existe clave exacta en el mapa (p.ej., días sin movimientos fuera
-   *   del rango de notas), busca el saldo más reciente anterior.
-   * - Si no hay notas previas, retorna 0.
-   */
-  const getBalanceAcumuladoParaFecha = (fecha) => {
-    if (!fecha) return 0;
-
-    // Usamos clave local para coherencia con el mapa acumulado
-    const key = keyFromLocalDate(fecha);
-
-    // 1) Si existe exacta en el mapa:
-    if (acumuladoPorFecha.has(key)) {
-      return acumuladoPorFecha.get(key);
-    }
-
-    // 2) Buscar el saldo previo más cercano (clave <= key)
-    //    Como clavesAcumuladoAsc está ordenado, iteramos hasta pasar la fecha.
-    let ultimoSaldo = 0;
-    for (const k of clavesAcumuladoAsc) {
-      if (k <= key) {
-        ultimoSaldo = acumuladoPorFecha.get(k) ?? ultimoSaldo;
-      } else {
-        break;
-      }
-    }
-
-    return ultimoSaldo;
-  };
+  const balanceTotal = useMemo(() => {
+    return notas.reduce((total, nota) => {
+      const monto = nota.monto || 0;
+      return nota.tipo === "ingreso" ? total + monto : total - monto;
+    }, 0);
+  }, [notas]);
 
   // --------------------------------------------------------------------------
-  // NOTAS DEL DÍA SELECCIONADO
-  // --------------------------------------------------------------------------
-  const notasDelDia = useMemo(() => {
-    if (!fechaSeleccionada) return [];
-    return notasPorFecha.get(dateKey(fechaSeleccionada)) || [];
-  }, [fechaSeleccionada, notasPorFecha]);
-
-  // --------------------------------------------------------------------------
-  // CONTENIDO DE LA CELDA DEL CALENDARIO (solo puntos de actividad)
-  //   - NO mostramos saldos en celdas (requisito explícito).
+  // CONTENIDO DE LA CELDA DEL CALENDARIO
   // --------------------------------------------------------------------------
   const tileContent = ({ date, view }) => {
     if (view !== "month") return null;
@@ -427,19 +292,24 @@ const Calendario = () => {
   };
 
   // --------------------------------------------------------------------------
+  // NOTAS DEL DÍA SELECCIONADO
+  // --------------------------------------------------------------------------
+  const notasDelDia = useMemo(() => {
+    if (!fechaSeleccionada) return [];
+    return notasPorFecha.get(dateKey(fechaSeleccionada)) || [];
+  }, [fechaSeleccionada, notasPorFecha]);
+
+  // --------------------------------------------------------------------------
   // RENDER
   // --------------------------------------------------------------------------
   return (
     <div className="calendario-container">
-      {/* Sin botón superior de agregar: se abre el modal al hacer click en un día */}
-
       <div className="calendario-wrap">
         <Calendar
           locale="es-MX"
           onClickDay={(date) => {
             setFechaSeleccionada(date);
             setMostrarModal(true);
-            // Actualiza el mes seleccionado en el contexto global
             const yyyyMm = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
             setMesSeleccionado(yyyyMm);
           }}
@@ -447,26 +317,20 @@ const Calendario = () => {
         />
       </div>
 
-      {/* Modal con detalle del día seleccionado */}
       {mostrarModal && fechaSeleccionada && (
         <DetalleDiaModal
           fecha={fechaSeleccionada}
           notas={notasDelDia}
           onClose={() => setMostrarModal(false)}
           onAdd={(nueva) => setNotas((prev) => [...prev, nueva])}
-          onDelete={(id) =>
-            setNotas((prev) => prev.filter((n) => n.id !== id))
-          }
+          onDelete={(id) => setNotas((prev) => prev.filter((n) => n.id !== id))}
           moneda={moneda}
           setMoneda={setMoneda}
-          // Balance acumulado exacto para la fecha seleccionada,
-          // con propagación a días sin movimientos.
-          balanceAcumulado={getBalanceAcumuladoParaFecha(fechaSeleccionada)}
+          balanceAcumulado={balanceTotal} // SIEMPRE el balance total
         />
       )}
     </div>
   );
 };
 
-// Export por defecto del componente principal
 export default Calendario;

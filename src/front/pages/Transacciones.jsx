@@ -14,6 +14,7 @@ import {
 } from 'chart.js';
 import "../styles/Transacciones.css";
 
+// Registra los componentes de ChartJS
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -33,35 +34,61 @@ const formatearFecha = (fecha) => {
   });
 };
 
+const formatearMesAnio = (fecha) => {
+  return new Date(fecha).toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'long'
+  });
+};
+
+// Generador dinámico de colores para categorías
+const generarColores = (n) => {
+  const colores = [];
+  for (let i = 0; i < n; i++) {
+    const hue = (i * 137.508) % 360;
+    colores.push(`hsl(${hue}, 70%, 50%)`);
+  }
+  return colores;
+};
+
 const Transacciones = () => {
   const { notas, setNotas } = useCalendarDashboard();
+  const [chartType, setChartType] = useState('line');
+  const [selectedMonth, setSelectedMonth] = useState('all');
 
   // Ordena todas las transacciones cronológicamente descendente
   const transaccionesOrdenadas = useMemo(() => {
     return [...notas].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
   }, [notas]);
 
-  // Agregar nota independiente a una transacción
-  const agregarNota = (id, nuevaNota) => {
-    setNotas(prev => prev.map(tx =>
-      tx.id === id
-        ? { ...tx, notas: [...(tx.notas || []), nuevaNota] }
-        : tx
-    ));
-  };
+  // Agrupa las transacciones por mes y año para el dropdown
+  const transaccionesAgrupadas = useMemo(() => {
+    return transaccionesOrdenadas.reduce((acc, tx) => {
+      const mesAnio = formatearMesAnio(tx.fecha);
+      if (!acc[mesAnio]) {
+        acc[mesAnio] = [];
+      }
+      acc[mesAnio].push(tx);
+      return acc;
+    }, {});
+  }, [transaccionesOrdenadas]);
 
-  const [chartType, setChartType] = useState('line');
+  // Filtra las transacciones según el mes seleccionado en el dropdown
+  const transaccionesFiltradas = useMemo(() => {
+    if (selectedMonth === 'all') {
+      return transaccionesOrdenadas;
+    }
+    return transaccionesAgrupadas[selectedMonth] || [];
+  }, [selectedMonth, transaccionesOrdenadas, transaccionesAgrupadas]);
 
-  // Preparar datos para las gráficas
+  // Prepara los datos para las gráficas basándose en las transacciones filtradas
   const chartData = useMemo(() => {
     const fechas = [];
     const ingresos = [];
     const egresos = [];
     const totalPorCategoria = {};
-    let totalIngresos = 0;
-    let totalEgresos = 0;
 
-    transaccionesOrdenadas.forEach(tx => {
+    transaccionesFiltradas.forEach(tx => {
       const fecha = formatearFecha(tx.fecha);
       const monto = parseFloat(tx.monto);
 
@@ -74,18 +101,18 @@ const Transacciones = () => {
       const index = fechas.indexOf(fecha);
       if (tx.tipo === 'ingreso') {
         ingresos[index] += monto;
-        totalIngresos += monto;
       } else {
         egresos[index] += monto;
-        totalEgresos += monto;
       }
 
-      // Acumular por categoría
       if (!totalPorCategoria[tx.categoria]) {
         totalPorCategoria[tx.categoria] = { ingreso: 0, egreso: 0 };
       }
       totalPorCategoria[tx.categoria][tx.tipo] += monto;
     });
+
+    const categorias = Object.keys(totalPorCategoria);
+    const coloresCategorias = generarColores(categorias.length);
 
     return {
       line: {
@@ -108,20 +135,14 @@ const Transacciones = () => {
         ]
       },
       pie: {
-        labels: Object.keys(totalPorCategoria),
+        labels: categorias,
         datasets: [{
           data: Object.values(totalPorCategoria).map(v => Math.abs(v.egreso)),
-          backgroundColor: [
-            'rgba(99, 102, 241, 0.8)',
-            'rgba(220, 38, 38, 0.8)',
-            'rgba(5, 150, 105, 0.8)',
-            'rgba(245, 158, 11, 0.8)',
-            'rgba(28, 250, 239, 0.8)',
-          ]
+          backgroundColor: coloresCategorias
         }]
       }
     };
-  }, [transaccionesOrdenadas]);
+  }, [transaccionesFiltradas]);
 
   const chartOptions = {
     responsive: true,
@@ -137,6 +158,14 @@ const Transacciones = () => {
     }
   };
 
+  const agregarNota = (id, nuevaNota) => {
+    setNotas(prev => prev.map(tx =>
+      tx.id === id
+        ? { ...tx, notas: [...(tx.notas || []), nuevaNota] }
+        : tx
+    ));
+  };
+
   return (
     <section className="transacciones-container">
       <header>
@@ -145,14 +174,27 @@ const Transacciones = () => {
       </header>
       <div className="split-layout">
         <div className="transacciones-list">
-          {transaccionesOrdenadas.length > 0 ? (
-            transaccionesOrdenadas.map(tx => (
+          <div className="filter-controls">
+            <label htmlFor="month-select">Filtrar por mes:</label>
+            <select
+              id="month-select"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+            >
+              <option value="all">Todos los meses</option>
+              {Object.keys(transaccionesAgrupadas).map(mesAnio => (
+                <option key={mesAnio} value={mesAnio}>{mesAnio}</option>
+              ))}
+            </select>
+          </div>
+          {transaccionesFiltradas.length > 0 ? (
+            transaccionesFiltradas.map(tx => (
               <div key={tx.id} className="transaccion-item">
                 <div className="transaccion-fecha">{formatearFecha(tx.fecha)}</div>
                 <div className="transaccion-info">
                   <span className="transaccion-categoria">{tx.categoria}</span>
                   <span className="transaccion-detalle">{tx.detalle}</span>
-                  <span className={`transaccion-monto ${tx.tipo}`}>{tx.tipo === 'egreso' ? '-' : '+'} ${tx.monto}</span>
+                  <span className={`transaccion-monto ${tx.tipo}`}>{tx.tipo === 'egreso' ? '-' : '+'}${tx.monto}</span>
                 </div>
                 {/* Notas independientes */}
                 <div className="notas-independientes">
@@ -161,12 +203,16 @@ const Transacciones = () => {
                       <li key={i}>{nota}</li>
                     ))}
                   </ul>
-                  <input type="text" placeholder="Agregar nota..." onKeyDown={e => {
-                    if (e.key === 'Enter' && e.target.value) {
-                      agregarNota(tx.id, e.target.value);
-                      e.target.value = '';
-                    }
-                  }} />
+                  <input
+                    type="text"
+                    placeholder="Agregar nota..."
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && e.target.value) {
+                        agregarNota(tx.id, e.target.value);
+                        e.target.value = '';
+                      }
+                    }}
+                  />
                 </div>
               </div>
             ))
