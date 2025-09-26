@@ -328,6 +328,87 @@ body {
   margin-top: 0.5rem;
 }
 
+/* ===== REFLEXIÓN DEL DÍA ===== */
+.reflexion-section {
+  grid-column: 1 / -1; /* ocupar ancho total de la grilla */
+}
+
+.reflexion-header {
+  text-align: center;
+  margin: 0 0 0.75rem 0;
+}
+
+.reflexion-header h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.6rem;
+}
+
+.reflexion-panel {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid #c7d2fe; /* azul suave */
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+}
+
+.reflexion-textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 130px;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background: #ffffff;
+}
+
+.reflexion-textarea:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+.reflexion-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+}
+
+.reflexion-actions.center {
+  justify-content: center;
+}
+
+.reflexion-save-btn {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 0.65rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.25);
+}
+
+.reflexion-save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.35);
+}
+
+.reflexion-more {
+  margin-top: 0.6rem;
+  text-align: center;
+}
+
+.reflexion-more .ver-reflexiones {
+  font-size: 0.95rem;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.reflexion-more .ver-reflexiones:hover { text-decoration: underline; }
+
 /* ===== UTILS ===== */
 .muted {
   color: #6b7280;

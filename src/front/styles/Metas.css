@@ -129,6 +129,83 @@
   color: #333;
 }
 
+/* ================================ */
+/* 🎯 Progreso de metas (mejorado) */
+/* ================================ */
+.metas-progreso {
+  background: linear-gradient(180deg, #ffffff 0%, #f7fee7 100%);
+  border: 1px solid #dcfce7;
+}
+
+.progreso-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.badge-pct {
+  background: #22c55e;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.progreso-bar {
+  position: relative;
+  height: 16px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.progreso-fill {
+  position: relative;
+  height: 100%;
+  background: linear-gradient(90deg, #86efac, #22c55e);
+  width: 0%;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  transition: width 250ms ease;
+}
+
+.progreso-label {
+  font-size: 0.8rem;
+  color: #065f46;
+  padding-right: 0.5rem;
+  font-weight: 700;
+}
+
+.progreso-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.stat {
+  background: #f0fdf4;
+  border: 1px solid #dcfce7;
+  border-radius: 8px;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.stat strong {
+  display: block;
+  font-size: 1.1rem;
+}
+
+.stat span {
+  font-size: 0.8rem;
+  color: #065f46;
+}
+
 /* 📋 Lista de metas */
 .metas-lista h2 {
   margin-bottom: 0.5rem;
@@ -182,3 +259,163 @@
 .acciones button:hover {
   opacity: 0.7;
 }
+
+/* ================================ */
+/* 🪟 Modal estilos                */
+/* ================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.45), rgba(0,0,0,0.65));
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  z-index: 1000;
+  animation: fadeIn 180ms ease-out;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfbff 100%);
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(20, 24, 40, 0.25);
+  border: 1px solid rgba(99, 102, 241, 0.12);
+  overflow: hidden;
+  transform: translateY(6px);
+  animation: popUp 220ms ease-out forwards;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1rem;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #374151;
+  font-weight: 700;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.modal-body {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+}
+
+.modal-body label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field-label {
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.modal-body input,
+.modal-body select {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 0.95rem;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.modal-body input:focus,
+.modal-body select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.checkbox-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.checkbox-inline input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #6366f1;
+}
+
+.checkbox-inline span {
+  color: #374151;
+  font-weight: 500;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem 1rem;
+}
+
+.btn {
+  padding: 0.6rem 0.95rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: #fff;
+}
+
+.btn.ghost {
+  background: #fff;
+  color: #374151;
+  border-color: #e5e7eb;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popUp {
+  to { transform: translateY(0); }
+}
+
+/* 🧩 Lista compacta en dashboard */
+.metas-list-compact {
+  list-style: none;
+  padding: 0;
+  margin: 0.25rem 0 0 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.metas-list-compact li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.muted { color: #6b7280; font-size: 0.85rem; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.error-text { color: #dc2626; font-size: 0.85rem; }

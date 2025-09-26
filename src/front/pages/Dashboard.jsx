@@ -79,6 +79,7 @@ export default function Dashboard({ moneda = "MXN", categorias = [] }) {
   const { notas, mesSeleccionado, setMesSeleccionado } = useCalendarDashboard();
   const [mesesDisponibles, setMesesDisponibles] = useState([]);
   const fmt = useMemo(() => buildFormatter(moneda), [moneda]);
+  const [reflexionInput, setReflexionInput] = useState("");
 
   useEffect(() => {
     if (!Array.isArray(notas) || notas.length === 0) {
@@ -231,34 +232,81 @@ export default function Dashboard({ moneda = "MXN", categorias = [] }) {
         <div className="card metas">
           <div className="card-icon" aria-hidden>🎯</div>
           <div className="card-info">
-            <h4>Metas</h4>
+            <h4>⭐ Metas favoritas</h4>
             {store.metas.length === 0 ? (
               <p className="sin-datos">Sin metas</p>
             ) : (
-              <ul className="metas-list">
-                {store.metas.map((meta) => (
-                  <li key={meta.id} className={meta.cumplida ? "cumplida" : ""}>
-                    <span>{meta.titulo}</span>
-                    <div className="acciones">
-                      <button
-                        title="Marcar como cumplida"
-                        onClick={() => actions.toggleMeta(meta.id)}
-                      >
-                        ✅
-                      </button>
-                      <button
-                        title="Eliminar meta"
-                        onClick={() => actions.deleteMeta(meta.id)}
-                      >
-                        🗑
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              (() => {
+                const metas = Array.isArray(store.metas) ? store.metas : [];
+                const favoritas = metas.filter(m => m.favorita);
+                const restantes = metas.filter(m => !m.favorita);
+                const sortByDeadline = (arr) => arr.sort((a, b) => {
+                  const da = a.fechaLimite ? new Date(a.fechaLimite).getTime() : Infinity;
+                  const db = b.fechaLimite ? new Date(b.fechaLimite).getTime() : Infinity;
+                  return da - db;
+                });
+                const seleccion = (favoritas.length > 0 ? sortByDeadline(favoritas) : sortByDeadline(restantes)).slice(0, 5);
+
+                const hoy = new Date();
+                const mesesRestantes = (m) => m.fechaLimite ? Math.max(0, Math.ceil((new Date(m.fechaLimite) - hoy) / (1000*60*60*24*30))) : null;
+                const pct = (m) => m.montoObjetivo > 0 ? Math.min(100, Math.round((Number(m.ahorrado||0)/Number(m.montoObjetivo))*100)) : 0;
+
+                return (
+                  <ul className="metas-list-compact">
+                    {seleccion.map((m) => (
+                      <li key={m.id} className={m.cumplida ? "cumplida" : ""}>
+                        <span>{m.emoji || "🎯"} {m.titulo || "[Sin título]"}</span>
+                        <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                          <div className="progress" style={{ width:120, height:8 }}>
+                            <div className="progress-fill" style={{ width: `${pct(m)}%` }} />
+                          </div>
+                          <span className="muted" style={{ minWidth: 40, textAlign: "right" }}>{pct(m)}%</span>
+                          <span className="muted" style={{ minWidth: 70, textAlign: "right" }}>
+                            {mesesRestantes(m) !== null ? `Restan ${mesesRestantes(m)}m` : ""}
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                );
+              })()
             )}
+            <div className="more-metas"><a href="/metas">Ver todas las metas →</a></div>
           </div>
         </div>
+
+        {/* === Reflexión del día (sección de ancho completo) === */}
+        <section className="reflexion-section" aria-labelledby="reflexion-titulo">
+          <header className="reflexion-header">
+            <h3 id="reflexion-titulo">🧘 Reflexión del día</h3>
+            <p className="muted">Escribe tus pensamientos y guarda tu evolución</p>
+          </header>
+          <div className="reflexion-panel">
+            <textarea
+              className="reflexion-textarea"
+              rows={6}
+              placeholder="Escribe tu reflexión..."
+              value={reflexionInput}
+              onChange={(e) => setReflexionInput(e.target.value)}
+            />
+            <div className="reflexion-actions center">
+              <button
+                className="reflexion-save-btn"
+                onClick={() => {
+                  const texto = (reflexionInput || "").trim();
+                  if (!texto) return;
+                  actions.addReflexion(texto);
+                  setReflexionInput("");
+                }}
+              >
+                Guardar
+              </button>
+            </div>
+            <div className="reflexion-more">
+              <a href="/reflexion" className="ver-reflexiones">Ver otras reflexiones →</a>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

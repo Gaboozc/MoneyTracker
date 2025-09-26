@@ -115,6 +115,53 @@ export default function storeReducer(store, action = {}) {
             : meta
         )
       };
+    // ⭐ Marcar/desmarcar como favorita
+    case "toggle_favorita_meta":
+      return {
+        ...store,
+        metas: store.metas.map((m) =>
+          m.id === action.payload ? { ...m, favorita: !m.favorita } : m
+        ),
+      };
+    // 💸 Agregar aporte a una meta
+    case "add_aporte_meta": {
+      const { metaId, aporte } = action.payload || {};
+      return {
+        ...store,
+        metas: store.metas.map((m) => {
+          if (m.id !== metaId) return m;
+          const aportesPrev = Array.isArray(m.aportes) ? m.aportes : [];
+          const monto = Number(aporte?.monto) || 0;
+          const nuevoAportes = [
+            {
+              id: aporte?.id ?? Date.now(),
+              monto,
+              fecha: aporte?.fecha || new Date().toISOString().slice(0, 10),
+              transaccionId: aporte?.transaccionId ?? null,
+            },
+            ...aportesPrev,
+          ];
+          const ahorradoPrev = Number(m.ahorrado) || 0;
+          return { ...m, aportes: nuevoAportes, ahorrado: ahorradoPrev + monto };
+        }),
+      };
+    }
+    // 🗑️ Eliminar aporte de una meta
+    case "remove_aporte_meta": {
+      const { metaId, aporteId } = action.payload || {};
+      return {
+        ...store,
+        metas: store.metas.map((m) => {
+          if (m.id !== metaId) return m;
+          const aportesPrev = Array.isArray(m.aportes) ? m.aportes : [];
+          const eliminado = aportesPrev.find((a) => a.id === aporteId);
+          const nuevoAportes = aportesPrev.filter((a) => a.id !== aporteId);
+          const ahorradoPrev = Number(m.ahorrado) || 0;
+          const resta = Number(eliminado?.monto) || 0;
+          return { ...m, aportes: nuevoAportes, ahorrado: Math.max(0, ahorradoPrev - resta) };
+        }),
+      };
+    }
     // ==== Finanzas ====
     case "set_ingresos":
       return { ...store, ingresos: action.payload };
@@ -201,6 +248,22 @@ export const GlobalProvider = ({ children }) => {
     updateMeta: (meta) => dispatch({ type: "update_meta", payload: meta }),
     deleteMeta: (id) => dispatch({ type: "delete_meta", payload: id }),
     toggleMeta: (id) => dispatch({ type: "toggle_meta", payload: id }), // ✅ nueva acción
+    toggleFavoritaMeta: (id) => dispatch({ type: "toggle_favorita_meta", payload: id }),
+    addAporteMeta: (metaId, aporte) => dispatch({ type: "add_aporte_meta", payload: { metaId, aporte } }),
+    removeAporteMeta: (metaId, aporteId) => dispatch({ type: "remove_aporte_meta", payload: { metaId, aporteId } }),
+    assignTransaccionMeta: (metaId, transaccionId, monto, fecha) =>
+      dispatch({
+        type: "add_aporte_meta",
+        payload: {
+          metaId,
+          aporte: {
+            id: Date.now(),
+            monto: Number(monto) || 0,
+            fecha: fecha || new Date().toISOString().slice(0, 10),
+            transaccionId,
+          },
+        },
+      }),
 
     // ==== Finanzas ====
     setIngresos: (valor) => dispatch({ type: "set_ingresos", payload: valor }),

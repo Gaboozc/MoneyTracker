@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useCalendarDashboard } from "../Context/CalendarDashboardContext.jsx";
+import { useGlobalReducer } from "../store.jsx";
 import { Line, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -41,20 +42,27 @@ const formatearMesAnio = (fecha) => {
   });
 };
 
-// Generador dinámico de colores para categorías
+// Paleta contrastante base + generador dinámico
+const basePalette = [
+  '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b',
+  '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#ef4444', '#10b981'
+];
 const generarColores = (n) => {
-  const colores = [];
-  for (let i = 0; i < n; i++) {
+  if (n <= basePalette.length) return basePalette.slice(0, n);
+  const colores = [...basePalette];
+  for (let i = colores.length; i < n; i++) {
     const hue = (i * 137.508) % 360;
-    colores.push(`hsl(${hue}, 70%, 50%)`);
+    colores.push(`hsl(${hue}, 70%, 45%)`);
   }
   return colores;
 };
 
 const Transacciones = () => {
   const { notas, setNotas } = useCalendarDashboard();
+  const { store, actions } = useGlobalReducer();
   const [chartType, setChartType] = useState('line');
   const [selectedMonth, setSelectedMonth] = useState('all');
+  const [metaSeleccionada, setMetaSeleccionada] = useState({});
 
   // Ordena todas las transacciones cronológicamente descendente
   const transaccionesOrdenadas = useMemo(() => {
@@ -196,6 +204,34 @@ const Transacciones = () => {
                   <span className="transaccion-detalle">{tx.detalle}</span>
                   <span className={`transaccion-monto ${tx.tipo}`}>{tx.tipo === 'egreso' ? '-' : '+'}${tx.monto}</span>
                 </div>
+                {/* Asignar a meta */}
+                {tx.tipo === 'ingreso' && Array.isArray(store.metas) && store.metas.length > 0 && (
+                  <div className="asignar-meta" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 6 }}>
+                    <label className="sr-only" htmlFor={`sel-meta-${tx.id}`}>Asignar a meta</label>
+                    <select
+                      id={`sel-meta-${tx.id}`}
+                      value={metaSeleccionada[tx.id] || ""}
+                      onChange={(e) => setMetaSeleccionada({ ...metaSeleccionada, [tx.id]: e.target.value })}
+                    >
+                      <option value="">Asignar a meta…</option>
+                      {store.metas.map((m) => (
+                        <option key={m.id} value={m.id}>{m.emoji || '🎯'} {m.titulo || '[Sin título]'}</option>
+                      ))}
+                    </select>
+                    <button
+                      onClick={() => {
+                        const metaId = Number(metaSeleccionada[tx.id]);
+                        if (!metaId) return;
+                        const monto = Number(tx.monto) || 0;
+                        actions.assignTransaccionMeta(metaId, tx.id, monto, tx.fecha);
+                        // Limpiar selección para este item
+                        setMetaSeleccionada((prev) => ({ ...prev, [tx.id]: "" }));
+                      }}
+                    >
+                      Asignar
+                    </button>
+                  </div>
+                )}
                 {/* Notas independientes */}
                 <div className="notas-independientes">
                   <ul>
